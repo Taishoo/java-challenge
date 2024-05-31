@@ -1,8 +1,10 @@
 package jp.co.axa.apidemo.controllers;
 
 import io.swagger.annotations.ApiOperation;
+import jp.co.axa.apidemo.dto.request.EmployeeForm;
 import jp.co.axa.apidemo.dto.response.EmployeeResponse;
-import jp.co.axa.apidemo.entities.Employee;
+import jp.co.axa.apidemo.dto.response.EmployeeResultResponse;
+import jp.co.axa.apidemo.entities.EmployeeEntity;
 import jp.co.axa.apidemo.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,41 +20,36 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping("/employees")
-    @ApiOperation(value = "Retrieve all employee", response = Employee.class, responseContainer = "List")
-    public List<Employee> getEmployees() {
+    @ApiOperation(value = "Retrieve all employee", response = EmployeeEntity.class, responseContainer = "List")
+    public List<EmployeeResponse> getEmployees() {
         return employeeService.retrieveEmployees();
     }
 
     @GetMapping("/employees/{employeeId}")
-    @ApiOperation(value = "Retrieve specific employee", response = Employee.class)
-    public Employee getEmployee(@PathVariable("employeeId") Long employeeId) {
+    @ApiOperation(value = "Retrieve specific employee", response = EmployeeEntity.class)
+    public EmployeeResponse getEmployee(@PathVariable("employeeId") Long employeeId) {
         return employeeService.getEmployee(employeeId);
     }
 
     @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Save a new employee", response = EmployeeResponse.class)
-    public EmployeeResponse saveEmployee(@RequestBody Employee employee) {
-        return employeeService.saveEmployee(employee);
+    @ApiOperation(value = "Save a new employee", response = EmployeeResultResponse.class)
+    public EmployeeResultResponse saveEmployee(@RequestBody EmployeeForm employeeForm) {
+        return employeeService.saveEmployee(employeeForm);
     }
 
     @DeleteMapping("/employees/{employeeId}")
-    @ApiOperation(value = "Delete existing employee", response = EmployeeResponse.class)
-    public EmployeeResponse deleteEmployee(@PathVariable("employeeId")Long employeeId){
+    @ResponseStatus(HttpStatus.GONE)
+    @ApiOperation(value = "Delete existing employee", response = EmployeeResultResponse.class)
+    public EmployeeResultResponse deleteEmployee(@PathVariable("employeeId")Long employeeId){
         return employeeService.deleteEmployee(employeeId);
     }
 
     @PutMapping("/employees/{employeeId}")
-    @ApiOperation(value = "Edit exiting employee", response = EmployeeResponse.class)
-    public EmployeeResponse updateEmployee
-            (@RequestBody Employee employee,
-             @PathVariable("employeeId")Long employeeId){
-//        Employee emp = employeeService.getEmployee(employeeId);
-//        if(emp != null){
-//            employeeService.updateEmployee(employee);
-//        }
-        employee.setId(employeeId);
-        return employeeService.updateEmployee(employee);
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Edit exiting employee", response = EmployeeResultResponse.class)
+    public EmployeeResultResponse updateEmployee(@RequestBody EmployeeForm employeeForm, @PathVariable("employeeId")Long employeeId){
+        return employeeService.updateEmployee(employeeForm, employeeId);
     }
 
 }
