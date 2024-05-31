@@ -1,8 +1,11 @@
 package jp.co.axa.apidemo.controllers;
 
+import io.swagger.annotations.ApiOperation;
+import jp.co.axa.apidemo.dto.response.EmployeeResponse;
 import jp.co.axa.apidemo.entities.Employee;
 import jp.co.axa.apidemo.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,36 +18,41 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping("/employees")
+    @ApiOperation(value = "Retrieve all employee", response = Employee.class, responseContainer = "List")
     public List<Employee> getEmployees() {
         return employeeService.retrieveEmployees();
     }
 
     @GetMapping("/employees/{employeeId}")
+    @ApiOperation(value = "Retrieve specific employee", response = Employee.class)
     public Employee getEmployee(@PathVariable("employeeId") Long employeeId) {
-        System.out.println(employeeId);
         return employeeService.getEmployee(employeeId);
     }
 
     @PostMapping("/employees")
-    public void saveEmployee(Employee employee) {
-        employeeService.saveEmployee(employee);
-        System.out.println("Employee Saved Successfully");
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Save a new employee", response = EmployeeResponse.class)
+    public EmployeeResponse saveEmployee(@RequestBody Employee employee) {
+        return employeeService.saveEmployee(employee);
     }
 
     @DeleteMapping("/employees/{employeeId}")
-    public void deleteEmployee(@PathVariable(name="employeeId")Long employeeId){
-        employeeService.deleteEmployee(employeeId);
-        System.out.println("Employee Deleted Successfully");
+    @ApiOperation(value = "Delete existing employee", response = EmployeeResponse.class)
+    public EmployeeResponse deleteEmployee(@PathVariable("employeeId")Long employeeId){
+        return employeeService.deleteEmployee(employeeId);
     }
 
     @PutMapping("/employees/{employeeId}")
-    public void updateEmployee(@RequestBody Employee employee,
-                               @PathVariable(name="employeeId")Long employeeId){
-        Employee emp = employeeService.getEmployee(employeeId);
-        if(emp != null){
-            employeeService.updateEmployee(employee);
-        }
-
+    @ApiOperation(value = "Edit exiting employee", response = EmployeeResponse.class)
+    public EmployeeResponse updateEmployee
+            (@RequestBody Employee employee,
+             @PathVariable("employeeId")Long employeeId){
+//        Employee emp = employeeService.getEmployee(employeeId);
+//        if(emp != null){
+//            employeeService.updateEmployee(employee);
+//        }
+        employee.setId(employeeId);
+        return employeeService.updateEmployee(employee);
     }
 
 }
