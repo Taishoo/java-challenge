@@ -1,15 +1,20 @@
 package jp.co.axa.apidemo.services;
 
 import jp.co.axa.apidemo.entities.Employee;
+import jp.co.axa.apidemo.exceptions.ApiResponseException;
 import jp.co.axa.apidemo.repositories.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+@RequiredArgsConstructor
+public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -19,13 +24,20 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     public List<Employee> retrieveEmployees() {
+
         List<Employee> employees = employeeRepository.findAll();
         return employees;
     }
 
     public Employee getEmployee(Long employeeId) {
-        Optional<Employee> optEmp = employeeRepository.findById(employeeId);
-        return optEmp.get();
+        Employee optEmp = employeeRepository.findById(employeeId)
+
+                .orElseThrow(()-> new ApiResponseException(
+                        HttpStatus.NOT_FOUND,
+                        "Employee not Found",
+                        "Employee id: " + employeeId + " does not exist.",
+                        "EMPLOYEE_001"));
+        return optEmp;
     }
 
     public void saveEmployee(Employee employee){
