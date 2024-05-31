@@ -1,5 +1,6 @@
 package jp.co.axa.apidemo.configs;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -10,10 +11,14 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.Collections;
-
 @Configuration
 public class SwaggerConfig {
+
+    @Value("${app.client.credential.id}")
+    private String clientId;
+
+    @Value("${app.client.credential.secret}")
+    private String clientSecret;
 
     @Bean
     public Docket swaggerConfiguration() {
@@ -27,7 +32,11 @@ public class SwaggerConfig {
 
     private ApiInfo metaData() {
         return new ApiInfoBuilder().title("AXA Java Challenge")
-                .description("API Documentation for accessing and modifying the Employee controller")
+                .description(
+                        "API Documentation for accessing and modifying the Employee controller<br><br>" +
+                                "x-client-id=" + clientId + "<br>" +
+                                "x-client-secret=" + clientSecret + "<br>"
+                )
                 .contact(new Contact("Albert V. De Leon Jr.", "https://github.com/Taishoo", "kitamoriken1@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

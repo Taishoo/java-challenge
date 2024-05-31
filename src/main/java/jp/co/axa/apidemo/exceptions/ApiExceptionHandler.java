@@ -23,4 +23,16 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(ex, httpStatus);
     }
+
+    @ExceptionHandler(value = {ClientCredentialException.class})
+    public ResponseEntity<Object> handleApiRequestException(ClientCredentialException e) {
+        ApiException ex = new ApiException(
+                HttpStatus.UNAUTHORIZED,
+                "Access Denied",
+                e.getMessage(),
+                "APP_001",
+                ZonedDateTime.now(ZoneId.of("Z"))
+        );
+        return new ResponseEntity<>(ex, HttpStatus.UNAUTHORIZED);
+    }
 }
