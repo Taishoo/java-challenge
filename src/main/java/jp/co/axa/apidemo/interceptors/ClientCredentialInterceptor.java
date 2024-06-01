@@ -27,8 +27,14 @@ public class ClientCredentialInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-       log.info("Validating incoming request...");
-       log.info("Request URL: " + request.getMethod() + ": " + request.getRequestURL());
+        /**
+         * Main client credential interceptor, validates the headers "x-client-id" and "x-client-secret"
+         * if values is not null or invalid
+         * else, throw ClientCredentialException
+         */
+
+        log.info("Validating incoming request...");
+        log.info("Request URL: " + request.getMethod() + ": " + request.getRequestURL());
 
        // Validate Client ID
        if (request.getHeader(HTTP_HEADER_CLIENT_ID) == null) {

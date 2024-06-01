@@ -22,6 +22,7 @@ public class SwaggerConfig {
 
     @Bean
     public Docket swaggerConfiguration() {
+        // Creates configuration for swagger
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .paths(PathSelectors.ant("/api/**"))
@@ -30,6 +31,7 @@ public class SwaggerConfig {
                 .apiInfo(metaData());
     }
 
+    // Adds additional information and metadata to Swagger documentation
     private ApiInfo metaData() {
         return new ApiInfoBuilder().title("AXA Java Challenge")
                 .description(

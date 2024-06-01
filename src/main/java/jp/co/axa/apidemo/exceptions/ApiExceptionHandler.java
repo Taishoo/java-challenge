@@ -11,6 +11,11 @@ import java.time.ZonedDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+    /**
+     * Apply the custom RuntimeException classes across the whole application
+     * not just to an individual controller.
+     */
+
     @ExceptionHandler(value = {ApiResponseException.class})
     public ResponseEntity<Object> handleApiRequestException(ApiResponseException e) {
         HttpStatus httpStatus = e.getHttpStatus();

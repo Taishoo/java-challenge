@@ -9,6 +9,9 @@ import java.time.ZonedDateTime;
 @Data
 @RequiredArgsConstructor
 public class ApiException {
+    /**
+     * Creating a standard ApiException that return all the required data below
+     */
     private final HttpStatus httpStatus;
     private final String message;
     private final String description;
