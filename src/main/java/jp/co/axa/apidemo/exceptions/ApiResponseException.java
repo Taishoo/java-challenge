@@ -1,11 +1,13 @@
 package jp.co.axa.apidemo.exceptions;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 @Slf4j
 @Data
+@NoArgsConstructor
 public class ApiResponseException extends RuntimeException {
 
     private String description;

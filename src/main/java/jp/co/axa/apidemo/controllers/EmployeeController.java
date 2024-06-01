@@ -4,9 +4,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import jp.co.axa.apidemo.dto.request.EmployeeForm;
-import jp.co.axa.apidemo.dto.response.EmployeeResponse;
 import jp.co.axa.apidemo.dto.response.EmployeeResultResponse;
-import jp.co.axa.apidemo.entities.EmployeeEntity;
+import jp.co.axa.apidemo.entities.Employee;
 import jp.co.axa.apidemo.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,22 +21,22 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping("/employees")
-    @ApiOperation(value = "Retrieve all employee", response = EmployeeEntity.class, responseContainer = "List")
+    @ApiOperation(value = "Retrieve all employee", response = Employee.class, responseContainer = "List")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "x-client-id", paramType = "header"),
             @ApiImplicitParam(name = "x-client-secret", paramType = "header")
     })
-    public List<EmployeeResponse> getEmployees() {
+    public List<Employee> getEmployees() {
         return employeeService.retrieveEmployees();
     }
 
     @GetMapping("/employees/{employeeId}")
-    @ApiOperation(value = "Retrieve specific employee", response = EmployeeEntity.class)
+    @ApiOperation(value = "Retrieve specific employee", response = Employee.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "x-client-id", paramType = "header"),
             @ApiImplicitParam(name = "x-client-secret", paramType = "header")
     })
-    public EmployeeResponse getEmployee(@PathVariable("employeeId") Long employeeId) {
+    public Employee getEmployee(@PathVariable("employeeId") Long employeeId) {
         return employeeService.getEmployee(employeeId);
     }
 
