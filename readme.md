@@ -42,6 +42,6 @@
 7. Added Custom ApiExceptions
 
 ## 7. About Me ##
-こんいちは！、I am Albert V. De Leon Jr. I have been using Spring Boot for 4 years.
+こんにちは！、I am Albert V. De Leon Jr. I have been using Spring Boot for 4 years.
 I used Spring Boot for 1 year in a Small Business (Laundry) Systems and 2 years and 10 months
 for a large scale fintech application.
