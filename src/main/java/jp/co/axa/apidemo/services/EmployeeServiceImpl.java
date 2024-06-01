@@ -1,12 +1,14 @@
 package jp.co.axa.apidemo.services;
 
-import jp.co.axa.apidemo.dto.request.EmployeeForm;
-import jp.co.axa.apidemo.dto.response.EmployeeResultResponse;
+import jp.co.axa.apidemo.dto.EmployeeForm;
 import jp.co.axa.apidemo.entities.Employee;
 import jp.co.axa.apidemo.exceptions.ApiResponseException;
 import jp.co.axa.apidemo.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Cacheable(cacheNames = "employees", key = "#employeeId")
     public Employee getEmployee(Long employeeId) {
 
         // Find entity by id
@@ -47,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeResultResponse saveEmployee(EmployeeForm employeeForm) {
+    public Employee saveEmployee(EmployeeForm employeeForm) {
 
         String message = "Employee Saved Successfully";
         Employee employee = Employee.builder()
@@ -71,14 +74,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // Set success message
-        return EmployeeResultResponse.builder()
-                .id(employee.getId().toString())
-                .message(message)
-                .build();
+        return employee;
     }
 
     @Override
-    public EmployeeResultResponse deleteEmployee(Long employeeId){
+    @CacheEvict(cacheNames = "employees", key = "#employeeId")
+    public String deleteEmployee(Long employeeId){
 
         String message = "Employee Deleted Successfully";
 
@@ -95,14 +96,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // Set success message
-        return EmployeeResultResponse.builder()
-                .id(employeeId.toString())
-                .message(message)
-                .build();
+        return message;
     }
 
     @Override
-    public EmployeeResultResponse updateEmployee(EmployeeForm employeeForm, Long employeeId) {
+    @CachePut(cacheNames = "employees", key = "#employeeId")
+    public Employee updateEmployee(EmployeeForm employeeForm, Long employeeId) {
 
         String message = "Employee Updated Successfully";
         Employee employee = Employee.builder()
@@ -128,10 +127,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // Set success message
-        return EmployeeResultResponse.builder()
-                .id(employee.getId().toString())
-                .message(message)
-                .build();
+        return employee;
     }
 
     private Boolean validateEmployee(Employee employee) {

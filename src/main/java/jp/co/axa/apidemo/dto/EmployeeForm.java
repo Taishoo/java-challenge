@@ -1,4 +1,4 @@
-package jp.co.axa.apidemo.dto.request;
+package jp.co.axa.apidemo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,8 +1,7 @@
 package jp.co.axa.apidemo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jp.co.axa.apidemo.dto.request.EmployeeForm;
-import jp.co.axa.apidemo.dto.response.EmployeeResultResponse;
+import jp.co.axa.apidemo.dto.EmployeeForm;
 import jp.co.axa.apidemo.entities.Employee;
 import jp.co.axa.apidemo.interceptors.ClientCredentialInterceptor;
 import jp.co.axa.apidemo.services.EmployeeService;
@@ -45,7 +44,7 @@ public class EmployeeControllerTest {
     @Test
     public void saveEmployee() throws Exception {
         EmployeeForm form = new EmployeeForm("Albert", 233, "IT");
-        EmployeeResultResponse response = new EmployeeResultResponse("1", "Employee Saved Successfully");
+        Employee response = new Employee(1l,"Albert", 233, "IT");
         Mockito.when(employeeService.saveEmployee(form)).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/employees").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -63,7 +62,7 @@ public class EmployeeControllerTest {
     @Test
     public void updateEmployee() throws Exception {
         EmployeeForm form = new EmployeeForm("Albert", 2332, "Marketing");
-        EmployeeResultResponse response = new EmployeeResultResponse("1", "Employee Updated Successfully");
+        Employee response = new Employee(1l,"Albert", 2332, "Marketing");
         Mockito.when(employeeService.saveEmployee(form)).thenReturn(response);
 
         mockMvc.perform(put("/api/v1/employees/{employeeId}", 1L).contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -73,8 +72,7 @@ public class EmployeeControllerTest {
 
     @Test
     public void deleteEmployee() throws Exception {
-        EmployeeResultResponse response = new EmployeeResultResponse("1", "Employee Deleted Successfully");
-        Mockito.when(employeeService.deleteEmployee(1L)).thenReturn(response);
+        Mockito.when(employeeService.deleteEmployee(1L)).thenReturn("Employee Deleted Successfully");
 
         mockMvc.perform(delete("/api/v1/employees/{employeeId}", 1L).contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
