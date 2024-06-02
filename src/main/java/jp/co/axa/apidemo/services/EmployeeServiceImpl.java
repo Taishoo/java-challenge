@@ -128,7 +128,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-    private Boolean validateEmployee(Employee employee) {
+    private Boolean validateEmployee(Employee employee) throws RuntimeException {
 
         final String prefix = "Invalid field data, ";
 
