@@ -28,8 +28,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // Get all employee data
         List<Employee> employeeEntities = employeeRepository.findAll();
-
-        // Map to response
         return employeeEntities;
     }
 
@@ -43,16 +41,17 @@ public class EmployeeServiceImpl implements EmployeeService {
                         HttpStatus.NOT_FOUND,
                         "Employee not Found",
                         "Employee id: " + employeeId + " does not exist.",
-                        "EMPLOYEE_001"));
+                        "EMPLOYEE_001"
+                ));
 
-        // Map to response
         return optEmp;
     }
 
     @Override
     public Employee saveEmployee(EmployeeForm employeeForm) {
 
-        String message = "Employee Saved Successfully";
+        final String message = "Employee Saved Successfully";
+
         Employee employee = Employee.builder()
                 .department(employeeForm.getDepartment())
                 .name(employeeForm.getName())
@@ -70,10 +69,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                     HttpStatus.UNPROCESSABLE_ENTITY,
                     "Failed to save new Employee",
                     e.getLocalizedMessage(),
-                    "EMPLOYEE_002");
+                    "EMPLOYEE_002"
+            );
         }
 
-        // Set success message
         return employee;
     }
 
@@ -81,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @CacheEvict(cacheNames = "employees", key = "#employeeId")
     public String deleteEmployee(Long employeeId){
 
-        String message = "Employee Deleted Successfully";
+        final String message = "Employee Deleted Successfully";
 
         // Perform field validation
         try {
@@ -92,18 +91,17 @@ public class EmployeeServiceImpl implements EmployeeService {
                     HttpStatus.UNPROCESSABLE_ENTITY,
                     "Failed to delete Employee",
                     "Employee with id: " + employeeId + " does not exist.",
-                    "EMPLOYEE_003");
+                    "EMPLOYEE_003"
+            );
         }
 
-        // Set success message
         return message;
     }
 
     @Override
     @CachePut(cacheNames = "employees", key = "#employeeId")
     public Employee updateEmployee(EmployeeForm employeeForm, Long employeeId) {
-
-        String message = "Employee Updated Successfully";
+        final String message = "Employee Updated Successfully";
         Employee employee = Employee.builder()
                 .salary(employeeForm.getSalary())
                 .name(employeeForm.getName())
@@ -123,20 +121,27 @@ public class EmployeeServiceImpl implements EmployeeService {
                     HttpStatus.UNPROCESSABLE_ENTITY,
                     "Failed to update Employee",
                     e.getLocalizedMessage(),
-                    "EMPLOYEE_004");
+                    "EMPLOYEE_004"
+            );
         }
 
-        // Set success message
         return employee;
     }
 
     private Boolean validateEmployee(Employee employee) {
-        if ((!Stream.of(
-                employee.getName(),
-                employee.getDepartment(),
-                employee.getSalary()).anyMatch(Objects::isNull))
-                && (employee.getSalary() instanceof Integer ? true : false)) {
-            return true;
-        } else { throw new RuntimeException("Invalid field data, please try again."); }
+
+        final String prefix = "Invalid field data, ";
+
+        // Perform a field validation for employee
+        if (Stream.of(employee.getName(), employee.getDepartment(), employee.getSalary()).anyMatch(Objects::isNull)) {
+            throw new RuntimeException(prefix + "null values are not allowed.");
+        }
+        else if (employee.getDepartment().isEmpty() || employee.getName().isEmpty()) {
+            throw new RuntimeException(prefix + "empty fields are not allowed.");
+        }
+        else if (employee.getSalary() < 0) {
+            throw new RuntimeException(prefix + "negative values are not allowed.");
+        }
+        return true;
     }
 }
