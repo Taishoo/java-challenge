@@ -50,8 +50,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee saveEmployee(EmployeeForm employeeForm) {
 
-        final String message = "Employee Saved Successfully";
-
         Employee employee = Employee.builder()
                 .department(employeeForm.getDepartment())
                 .name(employeeForm.getName())
@@ -62,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         try {
             if (validateEmployee(employee)) {
                 employeeRepository.save(employee);
-                log.info(message);
+                log.info("Employee Saved Successfully");
             }
         } catch (Exception e) {
             throw new ApiResponseException(
@@ -101,7 +99,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @CachePut(cacheNames = "employees", key = "#employeeId")
     public Employee updateEmployee(EmployeeForm employeeForm, Long employeeId) {
-        final String message = "Employee Updated Successfully";
+
         Employee employee = Employee.builder()
                 .salary(employeeForm.getSalary())
                 .name(employeeForm.getName())
@@ -115,7 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // Perform Validations
         try {
             employeeRepository.save(employee);
-            log.info(message);
+            log.info("Employee Updated Successfully");
         } catch (Exception e) {
             throw new ApiResponseException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
